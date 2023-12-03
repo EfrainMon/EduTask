@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         // Encuentra referencias a los elementos de diseño
         btnCrearMateria = findViewById(R.id.btnCrearMateria);
         btnEliminarMateria = findViewById(R.id.btnEliminarMateria);
-        edtNombreMateria = findViewById(R.id.edtNombreMateria);
-        edtClaveMateria = findViewById(R.id.edtClaveMateria);
+        edtNombreMateria = findViewById(R.id.edtNombreMateriaTest);
+        edtClaveMateria = findViewById(R.id.edtClaveMateriaTest);
 
         // Configura el OnClickListener para el botón
         btnCrearMateria.setOnClickListener(new View.OnClickListener() {

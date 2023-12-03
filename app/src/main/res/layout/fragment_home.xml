@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edtNombreMateria"
+        android:id="@+id/edtNombreMateriaTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -45,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edtClaveMateria"
+        android:id="@+id/edtClaveMateriaTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnCrearMateria"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtNombreMateria" />
+        app:layout_constraintTop_toBottomOf="@+id/edtNombreMateriaTest" />
 
     <Button
         android:id="@+id/btnEliminarMateria"
