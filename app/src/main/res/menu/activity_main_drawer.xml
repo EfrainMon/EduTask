@@ -27,5 +27,10 @@
             android:id="@+id/nav_asignacion"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_asignacion" />
+
+        <item
+            android:id="@+id/nav_materias"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_materias" />
     </group>
 </menu>

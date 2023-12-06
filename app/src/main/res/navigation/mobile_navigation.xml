@@ -34,4 +34,10 @@
         android:name="com.bandup.edutask.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_materias"
+        android:name="com.bandup.edutask.MateriasFragment"
+        android:label="@string/menu_materias"
+        tools:layout="@layout/fragment_slideshow" />
 </navigation>
