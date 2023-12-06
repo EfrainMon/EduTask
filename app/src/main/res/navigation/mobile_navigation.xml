@@ -18,6 +18,18 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
+        android:id="@+id/nav_asignaciones"
+        android:name="com.bandup.edutask.AsignacionesFragment"
+        android:label="@string/menu_asignaciones"
+        tools:layout="@layout/fragment_asignaciones" />
+
+    <fragment
+        android:id="@+id/nav_asignacion"
+        android:name="com.bandup.edutask.AsignacionFragment"
+        android:label="@string/menu_asignacion"
+        tools:layout="@layout/fragment_asignacion" />
+
+    <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.bandup.edutask.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
