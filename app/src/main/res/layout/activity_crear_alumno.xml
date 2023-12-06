@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="25dp"
     android:orientation="vertical"
     tools:context=".CrearAlumnoActivity">
 
@@ -11,6 +12,7 @@
         android:id="@+id/edtNumControlAlu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:ems="10"
         android:hint="Número de Control"
         android:inputType="text" />
@@ -19,6 +21,7 @@
         android:id="@+id/edtNombreAlu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:ems="10"
         android:hint="Nombre del alumno" />
 
@@ -26,6 +29,7 @@
         android:id="@+id/edtApPatAlu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:ems="10"
         android:hint="Apellido Paterno"
         android:inputType="text" />
@@ -34,13 +38,36 @@
         android:id="@+id/edtApMatAlu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:ems="10"
         android:hint="Apellido Materno"
         android:inputType="text" />
 
-    <Button
-        android:id="@+id/btnAgregarAlumno"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agregar Alumno" />
+        android:layout_weight="0"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Materias del alumno:"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CheckBox" />
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CheckBox" />
+    </LinearLayout>
+
 </LinearLayout>

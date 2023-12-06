@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="25dp"
     android:orientation="vertical"
-    tools:context=".CrearMateriaActivity" >
+    tools:context=".CrearMateriaActivity">
 
     <EditText
         android:id="@+id/edtNombreMateria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:ems="10"
         android:hint="Nombre de la Materia"
         android:inputType="text" />
@@ -19,14 +21,9 @@
         android:id="@+id/edtClaveMateria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:ems="10"
         android:hint="Clave de la Materia"
         android:inputType="text" />
-
-    <Button
-        android:id="@+id/btnAgregarMateria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Agregar Materia" />
 
 </LinearLayout>

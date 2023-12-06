@@ -57,48 +57,57 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Crear la tabla Alumno_Materia
-        String crearTablaAlumnoMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_MATERIA + " ("
-                + COL_ALUMNO_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_ALUMNO_MATERIA_NUM_CONTROL + " TEXT, "
-                + COL_ALUMNO_MATERIA_CLAVE + " TEXT)";
-        db.execSQL(crearTablaAlumnoMateria);
+            // Crear la tabla Alumno
+            String crearTablaAlumno = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO + " ("
+                    + COL_ALUMNO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COL_ALUMNO_NUM_CONTROL + " TEXT UNIQUE, "
+                    + COL_ALUMNO_NOMBRE + " TEXT, "
+                    + COL_ALUMNO_A_PATERNO + " TEXT, "
+                    + COL_ALUMNO_A_MATERNO + " TEXT, "
+                    + COL_ALUMNO_OCULTO + " INTEGER)";
+            db.execSQL(crearTablaAlumno);
 
-        // Crear la tabla Alumno_Asignacion
-        String crearTablaAlumnoAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_ASIGNACION + " ("
-                + COL_ALUMNO_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_ALUMNO_ASIGNACION_NUM_CONTROL + " TEXT, "
-                + COL_ALUMNO_ASIGNACION_ID_ASIGNACION + " INTEGER)";
-        db.execSQL(crearTablaAlumnoAsignacion);
+            // Crear la tabla Materia
+            String crearTablaMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_MATERIA + " ("
+                    + COL_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COL_MATERIA_CLAVE + " TEXT UNIQUE, "
+                    + COL_MATERIA_NOMBRE + " TEXT, "
+                    + COL_MATERIA_OCULTO + " INTEGER)";
+            db.execSQL(crearTablaMateria);
 
-        // Crear la tabla Alumno
-        String crearTablaAlumno = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO + " ("
-                + COL_ALUMNO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_ALUMNO_NUM_CONTROL + " TEXT, "
-                + COL_ALUMNO_NOMBRE + " TEXT, "
-                + COL_ALUMNO_A_PATERNO + " TEXT, "
-                + COL_ALUMNO_A_MATERNO + " TEXT, "
-                + COL_ALUMNO_OCULTO + " INTEGER)";
-        db.execSQL(crearTablaAlumno);
+            // Crear la tabla Asignacion
+            String crearTablaAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ASIGNACION + " ("
+                    + COL_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COL_ASIGNACION_FECHA + " TEXT, "
+                    + COL_ASIGNACION_NOMBRE + " TEXT, "
+                    + COL_ASIGNACION_REALIZADA + " INTEGER, "
+                    + COL_ASIGNACION_OCULTO + " INTEGER, "
+                    + "Materia_ID INTEGER, "
+                    + "FOREIGN KEY(Materia_ID) REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
+            db.execSQL(crearTablaAsignacion);
 
-        // Crear la tabla Asignacion
-        String crearTablaAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ASIGNACION + " ("
-                + COL_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_ASIGNACION_FECHA + " TEXT, "
-                + COL_ASIGNACION_NOMBRE + " TEXT, "
-                + COL_ASIGNACION_REALIZADA + " INTEGER, "
-                + COL_ASIGNACION_OCULTO + " INTEGER)";
-        db.execSQL(crearTablaAsignacion);
+            // Crear la tabla Alumno_Materia
+            String crearTablaAlumnoMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_MATERIA + " ("
+                    + COL_ALUMNO_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COL_ALUMNO_MATERIA_NUM_CONTROL + " TEXT, "
+                    + COL_ALUMNO_MATERIA_CLAVE + " TEXT, "
+                    + "Alumno_ID INTEGER, "
+                    + "Materia_ID INTEGER, "
+                    + "FOREIGN KEY(Alumno_ID) REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
+                    + "FOREIGN KEY(Materia_ID) REFERENCES " + TABLE_MATERIA + "(" + COL_MATERIA_ID + "))";
+            db.execSQL(crearTablaAlumnoMateria);
 
-        // Crear la tabla Materia
-        String crearTablaMateria = "CREATE TABLE IF NOT EXISTS " + TABLE_MATERIA + " ("
-                + COL_MATERIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_MATERIA_CLAVE + " TEXT, "
-                + COL_MATERIA_NOMBRE + " TEXT, "
-                + COL_MATERIA_OCULTO + " INTEGER)";
-        db.execSQL(crearTablaMateria);
-    }
-
+            // Crear la tabla Alumno_Asignacion
+            String crearTablaAlumnoAsignacion = "CREATE TABLE IF NOT EXISTS " + TABLE_ALUMNO_ASIGNACION + " ("
+                    + COL_ALUMNO_ASIGNACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COL_ALUMNO_ASIGNACION_NUM_CONTROL + " TEXT, "
+                    + COL_ALUMNO_ASIGNACION_ID_ASIGNACION + " INTEGER, "
+                    + "Alumno_ID INTEGER, "
+                    + "Asignacion_ID INTEGER, "
+                    + "FOREIGN KEY(Alumno_ID) REFERENCES " + TABLE_ALUMNO + "(" + COL_ALUMNO_ID + "), "
+                    + "FOREIGN KEY(Asignacion_ID) REFERENCES " + TABLE_ASIGNACION + "(" + COL_ASIGNACION_ID + "))";
+            db.execSQL(crearTablaAlumnoAsignacion);
+        }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -112,7 +121,7 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
     // Puedes agregar métodos para insertar, actualizar y consultar datos en cada tabla según tus necesidades
 
     // Ejemplo de método para agregar datos a la tabla Alumno
-    // Métodos para operaciones en la tabla Alumno
+// Métodos para operaciones en la tabla Alumno
     public boolean addAlumno(String numControl, String nombre, String aPaterno, String aMaterno, int oculto) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -129,11 +138,56 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
 
     public Cursor getAlumnos() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_ALUMNO;
+        String query = "SELECT * FROM " + TABLE_ALUMNO + " WHERE " + COL_ALUMNO_OCULTO + " = 0";
         return db.rawQuery(query, null);
     }
 
-    // ... (otros métodos para otras operaciones en la tabla Alumno)
+    public void deleteAlumno(String numControl) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Actualiza el valor de Oculto a 1 en lugar de eliminar la fila
+        ContentValues values = new ContentValues();
+        values.put(COL_ALUMNO_OCULTO, 1);
+
+        db.update(TABLE_ALUMNO, values, COL_ALUMNO_NUM_CONTROL + " = ?", new String[]{numControl});
+
+        // Puedes añadir logs o mensajes aquí para indicar que el alumno fue "eliminado"
+        Log.d(TAG, "deleteAlumno: Alumno con número de control " + numControl + " oculto (Oculto = 1)");
+    }
+
+    // Métodos para operaciones en la tabla Asignacion
+    public boolean addAsignacion(String fecha, String nombre, int realizada, int oculto, int materiaID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_ASIGNACION_FECHA, fecha);
+        contentValues.put(COL_ASIGNACION_NOMBRE, nombre);
+        contentValues.put(COL_ASIGNACION_REALIZADA, realizada);
+        contentValues.put(COL_ASIGNACION_OCULTO, oculto);
+        contentValues.put("Materia_ID", materiaID);
+
+        long resultado = db.insert(TABLE_ASIGNACION, null, contentValues);
+
+        return resultado != -1;
+    }
+
+    public Cursor getAsignaciones() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_ASIGNACION + " WHERE " + COL_ASIGNACION_OCULTO + " = 0";
+        return db.rawQuery(query, null);
+    }
+
+    public void deleteAsignacion(int asignacionID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Actualiza el valor de Oculto a 1 en lugar de eliminar la fila
+        ContentValues values = new ContentValues();
+        values.put(COL_ASIGNACION_OCULTO, 1);
+
+        db.update(TABLE_ASIGNACION, values, COL_ASIGNACION_ID + " = ?", new String[]{String.valueOf(asignacionID)});
+
+        // Puedes añadir logs o mensajes aquí para indicar que la asignación fue "eliminada"
+        Log.d(TAG, "deleteAsignacion: Asignación con ID " + asignacionID + " oculta (Oculto = 1)");
+    }
 
     // Métodos para operaciones en la tabla Materia
     public boolean addMateria(String clave, String nombre, int oculto) {
@@ -162,12 +216,10 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
         Log.d(TAG, "deleteMateria: Materia con nombre " + nombre + " y clave " + clave + " oculta (Oculto = 1)");
     }
 
-
     public Cursor getMaterias() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_MATERIA;
+        String query = "SELECT * FROM " + TABLE_MATERIA + " WHERE " + COL_MATERIA_OCULTO + " = 0";
         return db.rawQuery(query, null);
     }
 
-    // ... (otros métodos para otras operaciones en las demás tablas)
 }
