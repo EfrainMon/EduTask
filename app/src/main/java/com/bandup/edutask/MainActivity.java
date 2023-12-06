@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.WRAP_CONTENT
             ));
             nombreTextView.setText(nombreAsignacion);
-            nombreTextView.setTextSize(18);
+            nombreTextView.setTextSize(17);
             nombreTextView.setTypeface(null, Typeface.BOLD);
 
             // Agregar el TextView del nombre al LinearLayout
