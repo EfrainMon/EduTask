@@ -222,4 +222,14 @@ public class BaseDatosHelper extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
+    // Dentro de la clase BaseDatosHelper
+
+    public Cursor getAsignacionesParaDia(String fecha) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_ASIGNACION +
+                " WHERE " + COL_ASIGNACION_FECHA + " = ? AND " +
+                COL_ASIGNACION_OCULTO + " = 0 AND " +
+                COL_ASIGNACION_FECHA + " <= ?";
+        return db.rawQuery(query, new String[]{fecha, fecha});
+    }
 }

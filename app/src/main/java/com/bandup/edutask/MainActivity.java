@@ -2,18 +2,22 @@ package com.bandup.edutask;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
+    private CalendarView calendarView;
+
     BaseDatosHelper miBaseDatosHelper;
 
     private Button btnCrearMateria;
@@ -48,6 +54,57 @@ public class MainActivity extends AppCompatActivity {
         miBaseDatosHelper = new BaseDatosHelper(this);
 
         setSupportActionBar(binding.appBarMain.toolbar);
+
+        calendarView = findViewById(R.id.calendarView);
+
+        // Obtener la fecha actual
+        String fechaActual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // Obtener asignaciones para la fecha actual y fechas posteriores
+        Cursor asignacionesCursor = miBaseDatosHelper.getAsignacionesParaDia(fechaActual);
+
+        // Verificar si hay asignaciones para la fecha actual y fechas posteriores
+        if (asignacionesCursor != null && asignacionesCursor.moveToFirst()) {
+            mostrarAsignaciones(asignacionesCursor);
+        } else {
+            // No hay asignaciones para la fecha actual y fechas posteriores
+            Toast.makeText(MainActivity.this, "No hay asignaciones para la fecha actual y fechas posteriores", Toast.LENGTH_SHORT).show();
+        }
+
+        // Cerrar el cursor
+        if (asignacionesCursor != null) {
+            asignacionesCursor.close();
+        }
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                String fechaSeleccionada = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+
+                // Obtener la fecha actual
+                String fechaActual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+                // Si la fecha seleccionada es anterior a la fecha actual, mostrar asignaciones
+                if (fechaSeleccionada.compareTo(fechaActual) <= 0) {
+                    Cursor asignacionesCursor = miBaseDatosHelper.getAsignacionesParaDia(fechaSeleccionada);
+
+                    if (asignacionesCursor != null && asignacionesCursor.moveToFirst()) {
+                        mostrarAsignaciones(asignacionesCursor);
+                    } else {
+                        // No hay asignaciones para esta fecha
+                        Toast.makeText(MainActivity.this, "No hay asignaciones para la fecha seleccionada. Mostrando para fechas próximas...", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (asignacionesCursor != null) {
+                        asignacionesCursor.close();
+                    }
+                } else {
+                    // Limpiar la vista ya que la fecha seleccionada es posterior a la fecha actual
+                    LinearLayout cardContainer = findViewById(R.id.cardContainer);
+                    cardContainer.removeAllViews();
+                }
+            }
+        });
+
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -260,53 +317,70 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
 
-        // Encuentra referencias a los elementos de diseño
-        btnCrearMateria = findViewById(R.id.btnCrearMateria);
-        btnEliminarMateria = findViewById(R.id.btnEliminarMateria);
-        edtNombreMateria = findViewById(R.id.edtNombreMateriaTest);
-        edtClaveMateria = findViewById(R.id.edtClaveMateriaTest);
+    private void mostrarAsignaciones(Cursor asignacionesCursor) {
+        // Limpiar el contenedor de asignaciones antes de agregar nuevas asignaciones
+        LinearLayout cardContainer = findViewById(R.id.cardContainer);
+        cardContainer.removeAllViews();
 
-        // Configura el OnClickListener para el botón
-        btnCrearMateria.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Obtiene los valores de los EditText
-                String nombreMateria = edtNombreMateria.getText().toString();
-                String claveMateria = edtClaveMateria.getText().toString();
+        // Recorrer el cursor y mostrar cada asignación en un CardView
+        do {
+            int indexNombre = asignacionesCursor.getColumnIndexOrThrow("Nombre");
+            String nombreAsignacion = asignacionesCursor.getString(indexNombre);
 
-                // Verifica si los campos no están vacíos
-                if (!nombreMateria.isEmpty() && !claveMateria.isEmpty()) {
-                    // Agrega la materia a la base de datos
-                    boolean exito = miBaseDatosHelper.addMateria(claveMateria, nombreMateria, 0);
+            // Crear un nuevo CardView para cada asignación
+            CardView asignacionCard = new CardView(this);
+            asignacionCard.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            asignacionCard.setCardElevation(4);
 
-                    // Verifica si se agregó correctamente
-                    if (exito) {
-                        // Puedes mostrar un mensaje de éxito o realizar otras acciones
-                        Toast.makeText(MainActivity.this, "Materia agregada correctamente", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Puedes mostrar un mensaje de error si la inserción falló
-                        Toast.makeText(MainActivity.this, "Error al agregar la materia", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    // Muestra un mensaje si algún campo está vacío
-                    Toast.makeText(MainActivity.this, "Todos los campos deben ser completados", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+            // Crear un LinearLayout vertical para contener el nombre y la fecha de revisión
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            linearLayout.setPadding(16, 16, 16, 16);
 
-        btnEliminarMateria.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Obtiene los valores de los EditText
-                String nombreMateria = edtNombreMateria.getText().toString();
-                String claveMateria = edtClaveMateria.getText().toString();
+            // Crear un TextView para mostrar el nombre de la asignación
+            TextView nombreTextView = new TextView(this);
+            nombreTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            nombreTextView.setText(nombreAsignacion);
+            nombreTextView.setTextSize(18);
+            nombreTextView.setTypeface(null, Typeface.BOLD);
 
-                // Llamada al método deleteMateria en tu actividad o fragmento
-                miBaseDatosHelper.deleteMateria(nombreMateria, claveMateria);
-            }
-        });
+            // Agregar el TextView del nombre al LinearLayout
+            linearLayout.addView(nombreTextView);
 
+            // Obtener la fecha de revisión desde el cursor
+            int indexFechaRevision = asignacionesCursor.getColumnIndexOrThrow("Fecha");
+            String fechaRevision = asignacionesCursor.getString(indexFechaRevision);
+
+            // Crear un TextView para mostrar la fecha de revisión
+            TextView fechaTextView = new TextView(this);
+            fechaTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            fechaTextView.setText("Revisión programada para " + fechaRevision);
+            fechaTextView.setTextSize(15);
+
+            // Agregar el TextView de la fecha al LinearLayout
+            linearLayout.addView(fechaTextView);
+
+            // Agregar el LinearLayout al CardView
+            asignacionCard.addView(linearLayout);
+
+            // Agregar el CardView al contenedor
+            cardContainer.addView(asignacionCard);
+        } while (asignacionesCursor.moveToNext());
     }
 
     @Override
