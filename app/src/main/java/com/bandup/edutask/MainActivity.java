@@ -28,6 +28,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bandup.edutask.databinding.ActivityMainBinding;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -363,13 +365,21 @@ public class MainActivity extends AppCompatActivity {
             int indexFechaRevision = asignacionesCursor.getColumnIndexOrThrow("Fecha");
             String fechaRevision = asignacionesCursor.getString(indexFechaRevision);
 
+            // Convertir la cadena de fecha a un objeto LocalDate
+            DateTimeFormatter formatoOriginal = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault());
+            LocalDate fecha = LocalDate.parse(fechaRevision, formatoOriginal);
+
+            // Formatear la fecha en el nuevo formato
+            DateTimeFormatter nuevoFormato = DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+            String fechaFormateada = fecha.format(nuevoFormato);
+
             // Crear un TextView para mostrar la fecha de revisión
             TextView fechaTextView = new TextView(this);
             fechaTextView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             ));
-            fechaTextView.setText("Revisión programada para " + fechaRevision);
+            fechaTextView.setText("Revisión programada para el " + fechaFormateada);
             fechaTextView.setTextSize(15);
 
             // Agregar el TextView de la fecha al LinearLayout
